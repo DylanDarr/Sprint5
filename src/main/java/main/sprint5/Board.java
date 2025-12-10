@@ -8,7 +8,7 @@ public class Board {
     private Cell[][] gameGrid;
     public enum Color {RED, BLUE, PURPLE, BLACK}
     private Color[][] colorGrid;
-    private int BOARDSIZE;
+    private int boardSize;
     private String turn;
     private int unsetSOS = 0;
     private boolean gameOver = true;
@@ -19,15 +19,15 @@ public class Board {
     private int player2SOSCount;
 
     public Board(int bSize) {
-        BOARDSIZE = bSize;
-        gameGrid = new Cell[BOARDSIZE][BOARDSIZE];
-        colorGrid = new Color[BOARDSIZE][BOARDSIZE];
+        boardSize = bSize;
+        gameGrid = new Cell[boardSize][boardSize];
+        colorGrid = new Color[boardSize][boardSize];
         createBoard();
     }
 
-    public void createBoard() {
-        for (int row = 0; row < BOARDSIZE; row++){
-            for (int column = 0; column < BOARDSIZE; column++){
+    private void createBoard() {
+        for (int row = 0; row < boardSize; row++){
+            for (int column = 0; column < boardSize; column++){
                 gameGrid[row][column] = Cell.EMPTY;
                 colorGrid[row][column] = Color.BLACK;
             }
@@ -36,24 +36,24 @@ public class Board {
     }
 
     public Cell getCell(int row, int column) {
-        if (row >= 0 && row < BOARDSIZE && column >= 0 && column < BOARDSIZE)
+        if (row >= 0 && row < boardSize && column >= 0 && column < boardSize)
             return gameGrid[row][column];
         else
             return null;
     }
 
     public Color getColor(int row, int column) {
-        if (row >= 0 && row < BOARDSIZE && column >= 0 && column < BOARDSIZE)
+        if (row >= 0 && row < boardSize && column >= 0 && column < boardSize)
             return colorGrid[row][column];
         else
             return null;
     }
 
     public void setBoardSize(int number){
-        BOARDSIZE = number;
+        boardSize = number;
     }
 
-    public int getBoardSize() {return BOARDSIZE;}
+    public int getBoardSize() {return boardSize;}
 
     public String getTurn() {
         return turn;
@@ -80,7 +80,7 @@ public class Board {
     }
 
     public boolean validBoardSize() {
-        return BOARDSIZE >= 3 && BOARDSIZE <= 20 ;
+        return boardSize >= 3 && boardSize <= 20 ;
     }
 
     public void setPlayerSelection(String currentSelected, String player) {
@@ -98,17 +98,17 @@ public class Board {
         return ("PASS");
     }
 
-    public int sosCheck(int sRow, int sColumn, int oRow, int oColumn) {
-        int RowIndex = oRow - (sRow - oRow);
-        int ColumnIndex = oColumn - (sColumn - oColumn);
-        if (RowIndex < 0 || ColumnIndex < 0)
+    private int sosCheck(int sRow, int sColumn, int oRow, int oColumn) {
+        int rowIndex = oRow - (sRow - oRow);
+        int columnIndex = oColumn - (sColumn - oColumn);
+        if (rowIndex < 0 || columnIndex < 0)
             return 0;
-        if (RowIndex > BOARDSIZE - 1 || ColumnIndex > BOARDSIZE - 1)
+        if (rowIndex > boardSize - 1 || columnIndex > boardSize - 1)
             return 0;
-        if (gameGrid[RowIndex][ColumnIndex]
+        if (gameGrid[rowIndex][columnIndex]
                 == Cell.S){
-            int[] rowArray = {sRow, oRow, RowIndex};
-            int[] columnArray = {sColumn, oColumn, ColumnIndex};
+            int[] rowArray = {sRow, oRow, rowIndex};
+            int[] columnArray = {sColumn, oColumn, columnIndex};
 
             for (int i = 0; i < rowArray.length; i++){
                 if (turn.equals("PLAYER1")){
@@ -132,7 +132,7 @@ public class Board {
         return 0;
     }
 
-    public int determineSOS(int checkRow, int checkColumn, int placedRow, int placedColumn){
+    private int determineSOS(int checkRow, int checkColumn, int placedRow, int placedColumn){
         if (gameGrid[placedRow][placedColumn] == Cell.S){
             if (gameGrid[checkRow][checkColumn] == Cell.O){
                 return sosCheck(placedRow, placedColumn, checkRow, checkColumn);
@@ -145,17 +145,17 @@ public class Board {
         }
         return 0;
     }
-    public int checkBoardMin(int value){
+    private int checkBoardMin(int value){
         if (value - 1 <= 0) {return value;}
         return (value - 1);
     }
 
-    public int checkBoardMax(int value){
-        if (value + 1 >= BOARDSIZE) {return value;}
+    private int checkBoardMax(int value){
+        if (value + 1 >= boardSize) {return value;}
         return (value + 1);
     }
 
-    public int scanBoard (int row, int column, String selectedCell){
+    private int scanBoard (int row, int column, String selectedCell){
         int SOS = 0;
         for (int rowCheck = checkBoardMin(row); rowCheck <= checkBoardMax(row); rowCheck++) {
             for (int columnCheck = checkBoardMin(column); columnCheck <= checkBoardMax(column); columnCheck++) {
@@ -190,8 +190,8 @@ public class Board {
         Random rand = new Random();
 
         ArrayList<int[]> emptyCells = new ArrayList<>();
-        for(int r = 0; r < BOARDSIZE; r++) {
-            for(int c = 0; c < BOARDSIZE; c++) {
+        for(int r = 0; r < boardSize; r++) {
+            for(int c = 0; c < boardSize; c++) {
                 if(getCell(r, c) == Board.Cell.EMPTY) {
                     emptyCells.add(new int[]{r, c});
                 }
@@ -224,7 +224,7 @@ public class Board {
     }
 
     private String move(int row, int column, String player1Selection) {
-        if (row >= 0 && row < BOARDSIZE && column >= 0 && column < BOARDSIZE && gameGrid[row][column] == Cell.EMPTY) {
+        if (row >= 0 && row < boardSize && column >= 0 && column < boardSize && gameGrid[row][column] == Cell.EMPTY) {
             gameGrid[row][column] = (player1Selection.equals("S")) ? Cell.S : Cell.O;
             unsetSOS = scanBoard(row, column, gameGrid[row][column].name());
             return row + "," + column + "," + player1Selection;
@@ -234,9 +234,9 @@ public class Board {
         }
     }
 
-    public boolean checkFullBoard(){
-        for (int row = 0; row < BOARDSIZE; row++) {
-            for (int column = 0; column < BOARDSIZE; column++) {
+    private boolean checkFullBoard(){
+        for (int row = 0; row < boardSize; row++) {
+            for (int column = 0; column < boardSize; column++) {
                 if (gameGrid[row][column] == Cell.EMPTY) {
                     return false;
                 }
@@ -245,7 +245,7 @@ public class Board {
         return true;
     }
 
-    public String decideWin() {
+    private String decideWin() {
         gameOver = true;
         if (player1SOSCount == player2SOSCount) {
             System.out.println("Tie Game");

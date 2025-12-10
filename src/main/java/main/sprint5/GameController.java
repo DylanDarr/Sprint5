@@ -141,7 +141,7 @@ public class GameController {
         board.setPlayerSelection(selection, player);
     }
 
-    public void handleGameModeClick(String modeClicked, boolean started) {
+    public void handleGameModeClick(String modeClicked) {
         if (modeClicked.equals("SIMPLE")) {
             board.setGamemodeSelection("SIMPLE");
             generalGameButton.setSelected(false);
@@ -152,7 +152,7 @@ public class GameController {
         }
     }
 
-    public void handleBoardSizeInput(String text, boolean started) {
+    public void handleBoardSizeInput(String text) {
         if (!text.isEmpty()) {
             try {
                 int size = Integer.parseInt(text);

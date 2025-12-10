@@ -83,7 +83,7 @@ public class GUI extends Application {
             });
         }
 
-        public StackPane imageSelect(String playerSelection, String color) {
+        private StackPane imageSelect(String playerSelection, String color) {
             File file = new File("./src/assets/" + playerSelection.toLowerCase() + color + ".png");
             Image imageURL = new Image(file.toURI().toString());
             ImageView image = new ImageView(imageURL);
@@ -139,8 +139,6 @@ public class GUI extends Application {
         private final Button replayButton = new Button("Replay Game");
 
         private Box[][] boxes;
-
-        private boolean started = false;
         private final GameController controller;
 
         public Scene getPrimaryScene() {
@@ -188,7 +186,7 @@ public class GUI extends Application {
                     simpleGameButton, generalGameButton, boardSizeField);
         }
 
-        public boolean radioSelection(RadioButton currentBtn, RadioButton secondaryBtn, String selection){
+        private boolean radioSelection(RadioButton currentBtn, RadioButton secondaryBtn, String selection){
             if (currentBtn.isSelected()) {
                 if (secondaryBtn.isSelected())
                     secondaryBtn.setSelected(false);
@@ -198,7 +196,7 @@ public class GUI extends Application {
             return false;
         }
 
-        public VBox createPlayingSelect(String player) {
+        private VBox createPlayingSelect(String player) {
             RadioButton humanButton = new RadioButton("Human");
             RadioButton botButton = new RadioButton("Bot");
 
@@ -236,7 +234,7 @@ public class GUI extends Application {
             return buttonBoxVBox;
         }
 
-        public VBox CreatePlayerSOSelect(String player){
+        private VBox createPlayerSOSelect(String player){
             RadioButton sSelect = new RadioButton();
             RadioButton oSelect = new RadioButton();
 
@@ -287,12 +285,12 @@ public class GUI extends Application {
             return (sOSelect);
         }
 
-        public VBox createPlayerMenu(String player) {
+        private VBox createPlayerMenu(String player) {
             VBox  playerMenu = new VBox();
             if (player.equals("PLAYER1")){
-                playerMenu.getChildren().addAll(CreatePlayerSOSelect(player), player1SOSCount);
+                playerMenu.getChildren().addAll(createPlayerSOSelect(player), player1SOSCount);
             } else {
-                playerMenu.getChildren().addAll(CreatePlayerSOSelect(player), player2SOSCount);
+                playerMenu.getChildren().addAll(createPlayerSOSelect(player), player2SOSCount);
             }
 
             playerMenu.setAlignment(Pos.CENTER);
@@ -301,18 +299,18 @@ public class GUI extends Application {
             return playerMenu;
         }
 
-        public HBox createGameSelect (){
+        private HBox createGameSelect (){
             simpleGameButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-                    controller.handleGameModeClick("SIMPLE", started);
+                    controller.handleGameModeClick("SIMPLE");
                 }
             });
 
             generalGameButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-                    controller.handleGameModeClick("GENERAL", started);
+                    controller.handleGameModeClick("GENERAL");
                 }
             });
 
@@ -326,7 +324,7 @@ public class GUI extends Application {
             return buttonBoxHBox;
         }
 
-        public HBox createBoardSizeSelect(){
+        private HBox createBoardSizeSelect(){
             HBox boardSizeHBox = new HBox();
 
             boardSizeHBox.setMinWidth(5);
@@ -340,14 +338,14 @@ public class GUI extends Application {
             boardSizeField.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-                    controller.handleBoardSizeInput(boardSizeField.getText(), started);
+                    controller.handleBoardSizeInput(boardSizeField.getText());
                 }
             });
 
             return boardSizeHBox;
         }
 
-        public GridPane GameBoard() {
+        private GridPane gameBoard() {
             GridPane gameBoardGrid = new GridPane();
             int size = controller.getBoard().getBoardSize();
             boxes = new Box[size][size];
@@ -362,7 +360,7 @@ public class GUI extends Application {
             return gameBoardGrid;
         }
 
-        public HBox createStartButton() {
+        private HBox createStartButton() {
             Button startGameButton = new Button("Start Game");
             HBox startGameHBox = new HBox();
             startGameHBox.setMinHeight(50);
@@ -380,15 +378,13 @@ public class GUI extends Application {
         }
 
         public void gameStart() {
-            started = true;
             replayButton.setVisible(false);
-
             bodyGrid.getChildren().removeIf(node -> GridPane.getRowIndex(node) == 1);
 
             VBox player1Menu = createPlayerMenu("PLAYER1");
             bodyGrid.add(player1Menu, 0, 1);
 
-            GridPane gameBoardGrid = this.GameBoard();
+            GridPane gameBoardGrid = this.gameBoard();
             bodyGrid.add(gameBoardGrid, 1, 1);
 
             VBox player2Menu = createPlayerMenu("PLAYER2");
@@ -397,8 +393,8 @@ public class GUI extends Application {
             borderPane.setBottom(gameStatus);
             BorderPane.setAlignment(gameStatus, Pos.CENTER);
 
-            controller.handleBoardSizeInput(boardSizeField.getText(), started);
-            controller.handleGameModeClick("", started);
+            controller.handleBoardSizeInput(boardSizeField.getText());
+            controller.handleGameModeClick("");
         }
     }
 
